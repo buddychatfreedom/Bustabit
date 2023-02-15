@@ -1,0 +1,18 @@
+{ // Define a transaction script context
+  val inputBox = INPUTS(0) // Get the input box
+  val outputBox = OUTPUTS(0) // Get the output box
+  val bet = inputBox.value // Get the player's bet from the input box
+  val multiplier = outputBox.R4[Int].get // Get the multiplier from the R4 register of the output box
+  val housePayout = (bet * multiplier) - bet // Calculate the payout for the house
+  val playerPayout = -1 * housePayout // Calculate the payout for the player
+
+  val isWinningOutput = outputBox.value >= (bet * multiplier) // Check if the output value is greater than or equal to the player's bet multiplied by the multiplier
+
+  val inputBoxCorrect = inputBox.tokens(0)._1 == SELF.id // Check that the input box contains the same token as the output box
+  val outputBoxCorrect = outputBox.tokens(0)._1 == SELF.id // Check that the output box contains the same token as the input box
+  val houseOutput = OUTPUTS(1) // Get the house output box
+  val houseOutputCorrect = houseOutput.tokens(0)._1 == SELF.id // Check that the house output box contains the same token as the input box
+  val housePayoutCorrect = houseOutput.value == housePayout // Check that the house output box value matches the calculated payout for the house
+
+  inputBoxCorrect && outputBoxCorrect && houseOutputCorrect && housePayoutCorrect && isWinningOutput
+}
